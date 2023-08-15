@@ -100,7 +100,7 @@ public:
 
 		}
 
-		int8_t y_offset = -1;
+		int8_t y_offset = 1;
 
 		
 		arduboy.drawPixel(x, y + y_offset);
@@ -242,11 +242,12 @@ public:
 
 				int16_t x_p = static_cast<int16_t>(cos(i) * radius);
 				int16_t y_p = static_cast<int16_t>(sin(i) * radius);
+				
 				arduboy.drawLine(x, y, x + x_p, y + y_p);
 
 			}
 
-			if (tick_count % 2 == 0)
+			if (tick_count % ((rand() % 2)) == 0)
 			{
 
 				radius++;
@@ -267,22 +268,28 @@ public:
 			for (uint8_t i = 0; i < NUM_STARS; ++i)
 			{
 
-				int16_t xsign = (rand() % 2) * -2 + 1;
-				int16_t ysign = (rand() % 2) * -2 + 1;
-
-				int16_t x_offset = xsign * (rand() % radius);
-				int16_t y_offset = ysign * (rand() % radius);
-
-				int16_t distance = (int16_t)sqrt((x - (x + x_offset)) * (x - (x + x_offset)) + (y - (y + y_offset)) * (y - (y + y_offset)));
-
-
-				if ((rand() % 255) <= p_twinkle && distance < radius)
+				if ((rand() % 255) <= p_twinkle)
 				{
 
-					arduboy.drawPixel(x + x_offset, y + y_offset);
+					int16_t xsign = (rand() % 2) * -2 + 1;
+					int16_t ysign = (rand() % 2) * -2 + 1;
+
+					int16_t x_offset = xsign * (rand() % radius);
+					int16_t y_offset = ysign * (rand() % radius);
+
+					int16_t distance = (int16_t)sqrt((x - (x + x_offset)) * (x - (x + x_offset)) + (y - (y + y_offset)) * (y - (y + y_offset)));
+
+
+					if (distance < radius)
+					{
+
+						arduboy.drawPixel(x + x_offset, y + y_offset);
+
+					}
 
 				}
 
+			
 			}
 
 			if (tick_count % sustain == 0)
@@ -405,8 +412,6 @@ public:
 	void draw()
 	{
 
-		morter.draw();
-		fuze.draw(morter.get_horizontal(), morter.get_base());
 		aeriel.draw(morter.get_horizontal(), morter.get_base());
 
 	}
@@ -589,8 +594,8 @@ public:
 
 				fireworks[i] = Firework(fireworks[i].get_x(), fireworks[i].get_y());
 
-				uint8_t gun_powder = ((rand() % 20) + 15);
-				fireworks[i].set((rand() % 14) + 5 ,gun_powder, 5);
+				uint8_t gun_powder = ((rand() % 20) + 23);
+				fireworks[i].set((rand() % 14) + 11, gun_powder, 5);
 
 			}
 
@@ -614,10 +619,10 @@ void setup()
 
 	for (int16_t i = 0; i < MAX_NUM_FIREWORKS; ++i) 
 	{
-		uint8_t gun_powder = ((rand() % 20) + 15);
+		uint8_t gun_powder = ((rand() % 20) + 23);
 		
-		fireworks[i] = Firework((i + 1) * 16 + 8, 58);
-		fireworks[i].set((rand() % 14) + 5 ,gun_powder, 5);
+		fireworks[i] = Firework((i + 1) * 16 + 8, 62);
+		fireworks[i].set((rand() % 14) + 11,gun_powder, 5);
 	}
 
 
@@ -641,8 +646,6 @@ void loop()
 	arduboy.pollButtons();
 	
 	pyromaniac.play();
-
-	arduboy.drawLine(0, 60, 128, 60);
 	
 	fireworks_show.enjoy();
 	
@@ -650,5 +653,4 @@ void loop()
 	arduboy.display();
 
 }
-
 
